@@ -1,5 +1,4 @@
 local M = {
-  opts = {},
   ns_id = 0,
 }
 
@@ -57,7 +56,7 @@ function M.detect_colors()
         vim.api.nvim_set_hl(0, color, { fg = '#' .. color })
 
         local opts = {
-          virt_text = {{M.block_character, color}},
+          virt_text = {{'█', color}},
           virt_text_pos = 'inline',
         }
 
@@ -74,10 +73,6 @@ function M.detect_colors()
 end
 
 function M.setup(opts)
-  M.opts = opts or {
-    block_character = '█',
-  }
-
   M.ns_id = vim.api.nvim_create_namespace("virtual-colors")
 
   M.init_autocmd()
