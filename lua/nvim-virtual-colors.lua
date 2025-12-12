@@ -3,29 +3,41 @@ local M = {
   ns_id = nil,
 }
 
+function M.hide()
+  if M.ns_id ~= nil then
+    vim.api.nvim_buf_clear_namespace(0, M.ns_id, 0, -1)
+  end
+end
+
+function M.show()
+  if M.ns_id ~= nil then
+    vim.api.nvim_buf_clear_namespace(0, M.ns_id, 0, -1)
+  end
+
+  M.detect_colors()
+end
+
 function M.init_autocmd()
+  local files_pattern = { '*.css' }
+
   vim.api.nvim_create_autocmd('InsertEnter', {
-    pattern = {'*.css'},
+    pattern = files_pattern,
     callback = function(ev)
-      vim.api.nvim_buf_clear_namespace(0, M.ns_id, 0, -1)
+      M.hide()
     end
   })
 
   vim.api.nvim_create_autocmd('InsertLeave', {
-    pattern = {'*.css'},
+    pattern = files_pattern,
     callback = function(ev)
       M.detect_colors()
     end
   })
 
   vim.api.nvim_create_autocmd('BufEnter', {
-    pattern = {'*.css'},
+    pattern = files_pattern,
     callback = function(ev)
-      if M.ns_id ~= nil then
-        vim.api.nvim_buf_clear_namespace(0, M.ns_id, 0, -1)
-      end
-
-      M.detect_colors()
+      M.show()
     end
   })
 end
@@ -187,6 +199,9 @@ function M.setup(opts)
   M.ns_id = vim.api.nvim_create_namespace("virtual-colors")
 
   M.init_autocmd()
+
+  vim.api.nvim_create_user_command("HideVirtualColors", M.hide, {})
+  vim.api.nvim_create_user_command("ShowVirtualColors", M.show, {})
 end
 
 return M
