@@ -90,6 +90,11 @@ function M.detect_colors()
           }
         end
 
+        if M.opts.display_on_sign_column == true then
+          opts.sign_text = '  '
+          opts.sign_hl_group = color
+        end
+
         local mark_id = vim.api.nvim_buf_set_extmark(0, M.ns_id, i - 1, color_index - 1, opts)
 
         offset = offset + semic_index + 1
@@ -154,6 +159,10 @@ function M.detect_colors()
           }
         end
 
+        if M.opts.display_on_sign_column == true then
+          opts.sign_text = '  '
+          opts.sign_hl_group = color
+        end
 
         local mark_id = vim.api.nvim_buf_set_extmark(0, M.ns_id, i - 1, rgb_index - 1, opts)
 
@@ -172,6 +181,7 @@ function M.setup(opts)
 
   M.opts = {
     display = opts.display or 'bg',
+    display_on_sign_column = opts.display_on_sign_column or true
   }
 
   M.ns_id = vim.api.nvim_create_namespace("virtual-colors")
